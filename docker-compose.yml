@@ -1,0 +1,21 @@
+version: '3'
+services:
+  server:
+    image: my-simple-server
+    restart: always
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test:  ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - autoheal=true
+  autoheal:
+    image: willfarrell/autoheal:1.2.0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    environment:
+      - AUTOHEAL_INTERVAL=60
